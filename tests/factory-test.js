@@ -73,7 +73,33 @@ describe('Factories', () => {
     });
   });
 
-  describe.skip('creating with relationships');
+  describe('creating with relationships', () => {
+
+    class Person {
+      name = String;
+
+      motherId = String;
+      fatherId = String;
+
+      get mother() {
+        return people(this).entities[this.motherId.state];
+      }
+
+      get father() {
+        return people(this).entities[this.fatherId.state];
+      }
+    }
+
+    beforeEach(() => {
+      let StoreType = Store(Person, (attrs) => ({ name: `Bob` }));
+      people = create(StoreType)
+        .create();
+    });
+
+    it('adds a person with relationships', () => {
+
+    });
+  });
 
   describe.skip('creating with overridden relationships');
 });
