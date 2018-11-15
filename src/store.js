@@ -1,15 +1,35 @@
 import { create, valueOf } from 'microstates';
+import { append, map } from 'funcadelic';
 
 export default function Store(Type, factory = (attrs) => attrs) {
   return class Store {
-    static Type = Type;
     nextId = Number;
     entities = create({ Type });
-    create(attributes = {}) {
+
+    create(overrides = {}) {
       let id = this.nextId.state;
+
+      let attrs = map((attr) => {
+        if (typeof attr === 'function') {
+          return attr(id);
+        } else {
+          return attr;
+        }
+      }, append(factory(), overrides));
+
       return this
         .nextId.increment()
-        .entities.put(id, factory(attributes));
+        .entities.put(id, attrs);
+    }
+
+    createMany(amount, overrides) {
+      let result = this;
+
+      for (let i = 0; i < amount; i++) {
+        result = result.create(overrides);
+      }
+
+      return result;
     }
   };
 }
