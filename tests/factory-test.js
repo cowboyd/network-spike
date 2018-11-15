@@ -119,6 +119,23 @@ describe('Factories', () => {
         expect(people.records[0].father.name.state).toEqual('Bob');
       });
     });
+
+    describe('creating relationships that are reused', () => {
+      beforeEach(() => {
+        people = people.createRecord({
+          mother(attrs, store) {
+            let [mother] = filter(store.people.records, person => person.name === attrs.name);
+            if (mother) {
+              return mother;
+            } else {
+              let withMother = store.people.createRecord(attrs);
+              let [mother] = filter(withMother.people.records, person => person.name === attrs.name);
+              return mother;
+            }
+          }
+        })
+      });
+    })
   });
 
 });
