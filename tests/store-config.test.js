@@ -1,20 +1,30 @@
 import expect from 'expect';
+import { valueOf } from 'microstates';
 
 import store from '../src/store';
 
 describe('Store configuration', () => {
+  let withRecords;
+
+  beforeEach(() => {
+    withRecords = store
+      .addType(class Person {
+        name = String
+      })
+      .createEntity('Person', {
+        name: 'Charles'
+      })
+      .createEntity('Person', {
+        name: 'Wil'
+      })
+  });
+
   it('works', () => {
-
-    // let store = Store(Person, Vehicle);
-
-    let withRecords = store
-        .addType(class Person {
-          name = String
-        })
-        .addEntity('Person', { name: 'Charles'})
-
-
-
-    expect(1).toEqual(1);
+    expect(valueOf(withRecords.entities)).toEqual({
+      Person: {
+        0: { name: 'Charles' },
+        1: { name: 'Wil' }
+      }
+    })
   });
 });
