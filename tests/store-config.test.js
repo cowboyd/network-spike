@@ -3,7 +3,7 @@ import { valueOf } from 'microstates';
 
 import store from '../src/store';
 
-describe('Store configuration', () => {
+describe.skip('Store configuration', () => {
   let withRecords;
 
   beforeEach(() => {
